@@ -184,7 +184,9 @@ export class VkPostTrigger implements INodeType {
 			if (data == null) {
 				continue;
 			}
-			data.items = data.items.filter((post) => post.post_type == 'post');
+			data.items = data.items.filter(
+				(post) => post.post_type == 'post' && post.marked_as_ads != 1 && post.is_pinned != 1,
+			);
 
 			const getOwnerData = (
 				post: IWallItem,
@@ -227,9 +229,6 @@ export class VkPostTrigger implements INodeType {
 			};
 
 			for (const post of data.items) {
-				if (post.marked_as_ads == 1 || post.is_pinned == 1) {
-					continue
-				}
 				const attachmentFiles: IBinaryKeyData = {};
 				const attachments: IVkTriggerResultAttachment[] = [];
 
@@ -278,7 +277,7 @@ export class VkPostTrigger implements INodeType {
 					});
 				}
 
-				const owner = getOwnerData(post)
+				const owner = getOwnerData(post);
 				posts.push({
 					json: {
 						owner,
