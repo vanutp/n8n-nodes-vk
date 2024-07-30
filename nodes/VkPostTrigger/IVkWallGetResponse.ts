@@ -33,9 +33,10 @@ interface IAttachment {
 
 export interface IWallItem {
 	post_type: 'post' | string;
-	id: string;
+	id: number;
 	owner_id: number;
 	marked_as_ads: number;
+	is_pinned: number;
 	date: number;
 	text: string;
 	attachments: IAttachment[];

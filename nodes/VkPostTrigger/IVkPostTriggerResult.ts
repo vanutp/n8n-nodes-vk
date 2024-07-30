@@ -16,4 +16,6 @@ export interface IVkPostTriggerResult {
 	date: number;
 	text: string;
 	attachments: IVkTriggerResultAttachment[];
+	id: number;
+	link: string;
 }
