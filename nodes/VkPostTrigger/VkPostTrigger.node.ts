@@ -230,8 +230,7 @@ export class VkPostTrigger implements INodeType {
 				}
 			};
 
-			console.log(`fetching ${data.items.length} posts from ${ownerId}`)
-
+			let postCount = 0;
 			for (const post of data.items) {
 				const attachmentFiles: IBinaryKeyData = {};
 				const attachments: IVkTriggerResultAttachment[] = [];
@@ -307,10 +306,13 @@ export class VkPostTrigger implements INodeType {
 					},
 					binary: attachmentFiles,
 				});
+				postCount++;
 				if (!lastPostById[ownerId]) {
 					break;
 				}
 			}
+
+			console.log(`fetched ${postCount} posts from ${ownerId}`)
 
 			if (data.items.length > 0) {
 				lastPostById[ownerId] = data.items[0].id;
