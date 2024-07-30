@@ -242,6 +242,19 @@ export class VkPostTrigger implements INodeType {
 					if (attachment.type == 'link') {
 						continue;
 					}
+					if (attachment.type == 'doc' && attachment.doc!.ext == 'gif') {
+						const doc = attachment.doc!;
+						const attachmentId = `${doc.owner_id}_${doc.id}`;
+						const url = doc.preview.video?.src;
+						if (!url) {
+							continue;
+						}
+						attachments.push({
+							id: attachmentId,
+							type: 'video',
+							url,
+						});
+					}
 					if (attachment.type != 'photo') {
 						text += `\n\nUnsupported attachment type "${attachment.type}"`;
 						continue;
@@ -273,6 +286,7 @@ export class VkPostTrigger implements INodeType {
 					// attachmentFiles[attachmentId] = await this.helpers.prepareBinaryData(data, fileName)
 					attachments.push({
 						id: attachmentId,
+						type: 'photo',
 						url: size.url,
 					});
 				}

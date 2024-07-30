@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-vk",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "VK nodes",
   "keywords": [
     "n8n-community-node-package"

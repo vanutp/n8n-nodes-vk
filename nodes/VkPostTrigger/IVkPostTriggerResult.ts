@@ -2,6 +2,7 @@ import { IVkGroup, IVkProfile } from './IVkWallGetResponse';
 
 export interface IVkTriggerResultAttachment {
 	id: string;
+	type: 'photo' | 'video';
 	url: string;
 }
 

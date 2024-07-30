@@ -26,9 +26,21 @@ interface IAttachmentPhoto {
 	orig_photo?: IPhotoSize;
 }
 
+interface IAttachmentDoc {
+	owner_id: number;
+	id: number;
+	ext: 'gif' | string;
+	preview: {
+		video?: {
+			src: string;
+		};
+	};
+}
+
 interface IAttachment {
-	type: 'photo' | 'link' | string;
+	type: 'photo' | 'doc' | 'link' | string;
 	photo?: IAttachmentPhoto;
+	doc?: IAttachmentDoc;
 }
 
 export interface IWallItem {
