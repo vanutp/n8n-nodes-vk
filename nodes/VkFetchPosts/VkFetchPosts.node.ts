@@ -281,6 +281,7 @@ async function executeOne(
 						type: 'video',
 						url,
 					});
+					continue;
 				}
 				if (attachment.type != 'photo') {
 					text += `\n\nUnsupported attachment type "${attachment.type}"`;
