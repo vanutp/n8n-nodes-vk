@@ -175,6 +175,8 @@ export class VkPostTrigger implements INodeType {
 
 		const posts: { json: IVkPostTriggerResult; binary: IBinaryKeyData }[] = [];
 
+		console.log(`fetching ${ownerIds.length} groups`)
+
 		for (const ownerId of ownerIds) {
 			const data = (await doRequest('wall.get', {
 				owner_id: ownerId,
@@ -227,6 +229,8 @@ export class VkPostTrigger implements INodeType {
 					};
 				}
 			};
+
+			console.log(`fetching ${data.items.length} posts from ${ownerId}`)
 
 			for (const post of data.items) {
 				const attachmentFiles: IBinaryKeyData = {};
