@@ -192,6 +192,7 @@ async function executeOne(
 		const data = (await doRequest('wall.get', {
 			owner_id: ownerId,
 			extended: groups == null ? 1 : 0,
+			count: 10,
 		})) as IVkWallGetResponse;
 		await sleep(300);
 		if (data == null) {
