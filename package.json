@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-vk",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "VK nodes",
   "keywords": [
     "n8n-community-node-package"
@@ -38,7 +38,7 @@
       "dist/credentials/VkApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/VkPostTrigger/VkPostTrigger.node.js"
+      "dist/nodes/VkFetchPosts/VkFetchPosts.node.js"
     ]
   },
   "devDependencies": {
