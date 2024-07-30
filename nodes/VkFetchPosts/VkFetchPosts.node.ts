@@ -141,9 +141,6 @@ async function executeOne(
 			json: true,
 		});
 		if (resp.error) {
-			// if (getFromSubscriptions && resp.error.error_code == 18) {
-			// 	return null;
-			// }
 			throw new NodeApiError(
 				this.getNode(),
 				{
@@ -162,13 +159,14 @@ async function executeOne(
 	};
 
 	let ownerIds: string[];
+	let groups: any[] | null = null;
 	if (getFromSubscriptions) {
 		const param = this.getNodeParameter('excludeSources', itemIndex, { meow: [] }) as {
 			meow: { ownerId: string }[];
 		};
 		const excludeSources = param.meow.map((x) => x.ownerId);
-		const data = (await doRequest('groups.get', { extended: 1 })).items as any[];
-		ownerIds = data
+		groups = (await doRequest('groups.get', { extended: 1 })).items as any[];
+		ownerIds = groups
 			.filter((group) => {
 				return !(
 					excludeSources.includes(group.id.toString()) ||
@@ -188,12 +186,12 @@ async function executeOne(
 
 	const posts: { json: IVkPostTriggerResult; binary: IBinaryKeyData }[] = [];
 
-	console.log(`fetching ${ownerIds.length} groups`);
+	// console.log(`fetching ${ownerIds.length} groups`);
 
 	for (const ownerId of ownerIds) {
 		const data = (await doRequest('wall.get', {
 			owner_id: ownerId,
-			extended: 1,
+			extended: groups == null ? 1 : 0,
 		})) as IVkWallGetResponse;
 		await sleep(300);
 		if (data == null) {
@@ -213,7 +211,14 @@ async function executeOne(
 			group?: IVkGroup;
 		} => {
 			if (post.owner_id < 0) {
-				const group = data.groups.find((g) => g.id == -post.owner_id);
+				const effectiveGroups = data.groups ?? groups;
+				if (!effectiveGroups) {
+					throw new NodeOperationError(
+						this.getNode(),
+						`Unable to get owner for post ${post.owner_id}_${post.id} (effectiveGroups is null)`,
+					);
+				}
+				const group = effectiveGroups.find((g) => g.id == -post.owner_id);
 				if (!group) {
 					throw new NodeOperationError(
 						this.getNode(),
@@ -227,6 +232,12 @@ async function executeOne(
 					link: 'https://vk.com/' + (group.screen_name || `public${group.id}`),
 				};
 			} else {
+				if (!data.profiles) {
+					throw new NodeOperationError(
+						this.getNode(),
+						`Unable to get owner for post ${post.owner_id}_${post.id} (profiles is null)`,
+					);
+				}
 				const profile = data.profiles.find((p) => p.id == post.owner_id);
 				if (!profile) {
 					throw new NodeOperationError(
@@ -325,7 +336,7 @@ async function executeOne(
 			}
 		}
 
-		console.log(`fetched ${postCount} posts from ${ownerId}`);
+		// console.log(`fetched ${postCount} posts from ${ownerId}`);
 
 		if (data.items.length > 0) {
 			lastPostById[ownerId] = data.items[0].id;

@@ -55,7 +55,7 @@ export interface IWallItem {
 }
 
 export interface IVkWallGetResponse {
-	groups: IVkGroup[];
-	profiles: IVkProfile[];
+	groups?: IVkGroup[];
+	profiles?: IVkProfile[];
 	items: IWallItem[];
 }
